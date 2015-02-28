@@ -28,15 +28,15 @@ public class SnakesNLadderGame {
 
 	private boolean waitForUserToEnter = false;
 
+	private int maxNumberOnDie = 6;
+
 	public SnakesNLadderGame() throws NumberFormatException, IOException {
 
 		reader = new GamePropertyReader(GameConstants.GAMEPROPERTYFILE);
-		int boardLength;
-		boardLength = Integer.parseInt(reader
-				.getProperty(GameConstants.BOARDLENGTH));
+		
+		int boardLength = Integer.parseInt(reader.getProperty(GameConstants.BOARDLENGTH));
 
-		int boardWidth = Integer.parseInt(reader
-				.getProperty(GameConstants.BOARDWIDTH));
+		int boardWidth = Integer.parseInt(reader.getProperty(GameConstants.BOARDWIDTH));
 
 		this.setTotalBoardItems(boardLength * boardWidth);
 
@@ -46,6 +46,11 @@ public class SnakesNLadderGame {
 
 		this.setSnakes(createHashTable(snakesStr));
 		this.setLadders(createHashTable(ladderStr));
+		try {
+			this.maxNumberOnDie = 6 * Integer.parseInt(reader.getProperty(GameConstants.NUMBEROFDICE));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static Hashtable<String, String> createHashTable(String str) {
@@ -120,8 +125,21 @@ public class SnakesNLadderGame {
 
 	public int rollTheDice() {
 		Random generator = new Random();
-		int i = generator.nextInt(6) + 1;
-		return i;
+		int sum = 0;
+		// Random generates entries from 0 to max-1 specified
+		int i = 0;
+		do {
+			// second chance
+			if (i != 0) {
+				System.out.println("Nice, you get second chance with Dice!");
+			}
+			i = generator.nextInt(maxNumberOnDie) + 1;
+			System.out.println("Dice face value: " + i);
+
+			sum += i;
+		} while (i == maxNumberOnDie);
+
+		return sum;
 	}
 
 	public void initialize(Scanner in) throws Exception {

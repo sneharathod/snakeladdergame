@@ -11,5 +11,7 @@ public class GameConstants {
 	public static final String LADDERS = "ladders";
 
 	public static final String GAMEPROPERTYFILE = "game.properties";
+	
+	public static final String NUMBEROFDICE = "numberOfDice";
 
 }
