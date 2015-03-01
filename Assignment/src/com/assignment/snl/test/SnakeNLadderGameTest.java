@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.assignment.snl.GameClient;
-import com.assignment.snl.model.SnakesNLadderGame;
+import com.assignment.snl.controller.SnakesNLadderGame;
 
 public class SnakeNLadderGameTest extends TestCase {
 

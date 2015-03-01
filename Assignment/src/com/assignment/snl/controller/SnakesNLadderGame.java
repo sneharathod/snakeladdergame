@@ -1,4 +1,4 @@
-package com.assignment.snl.model;
+package com.assignment.snl.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import com.assignment.snl.model.Board;
+import com.assignment.snl.model.Player;
 import com.assignment.snl.util.GameConstants;
 import com.assignment.snl.util.GamePropertyReader;
 
