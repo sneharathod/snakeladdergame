@@ -49,6 +49,7 @@ public class SnakesNLadderGame {
 		try {
 			in.hasNextInt();
 			noOfPlayers = in.nextInt();
+			
 
 			this.setNoOfPlayers(noOfPlayers);
 
@@ -77,6 +78,8 @@ public class SnakesNLadderGame {
 
 			System.out
 					.println("Initialization Done! Now, lets Start the game!\n");
+		}else{
+			throw new Exception("Please enter number of players as more than 0");
 		}
 
 	}
@@ -248,11 +251,11 @@ public class SnakesNLadderGame {
 
 		} catch (NumberFormatException | IOException e) {
 
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("Game Failure!");
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("Game Failure due to invalid Input!");
 
 		}
