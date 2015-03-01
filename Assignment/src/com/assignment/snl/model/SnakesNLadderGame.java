@@ -1,8 +1,6 @@
 package com.assignment.snl.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -12,13 +10,9 @@ import com.assignment.snl.util.GamePropertyReader;
 
 public class SnakesNLadderGame {
 
-	private Hashtable<String, String> snakes = new Hashtable<String, String>();
-
-	private Hashtable<String, String> ladders = new Hashtable<String, String>();
-
-	private int totalBoardItems = 0;
-
 	private List<Player> players = new ArrayList<Player>();
+
+	private Board board;
 
 	private int noOfPlayers = 0;// default
 
@@ -30,40 +24,56 @@ public class SnakesNLadderGame {
 
 	private int maxNumberOnDie = 6;
 
-	public SnakesNLadderGame() throws NumberFormatException, IOException {
+	public SnakesNLadderGame() {
 
-		reader = new GamePropertyReader(GameConstants.GAMEPROPERTYFILE);
-		
-		int boardLength = Integer.parseInt(reader.getProperty(GameConstants.BOARDLENGTH));
-
-		int boardWidth = Integer.parseInt(reader.getProperty(GameConstants.BOARDWIDTH));
-
-		this.setTotalBoardItems(boardLength * boardWidth);
-
-		String snakesStr = reader.getProperty(GameConstants.SNAKES);
-
-		String ladderStr = reader.getProperty(GameConstants.LADDERS);
-
-		this.setSnakes(createHashTable(snakesStr));
-		this.setLadders(createHashTable(ladderStr));
 		try {
-			this.maxNumberOnDie = 6 * Integer.parseInt(reader.getProperty(GameConstants.NUMBEROFDICE));
+			board = new Board();
+			
+			//read number of dice from properties file 
+			reader = new GamePropertyReader(GameConstants.GAMEPROPERTYFILE);
+
+			this.maxNumberOnDie = 6 * Integer.parseInt(reader
+					.getProperty(GameConstants.NUMBEROFDICE));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static Hashtable<String, String> createHashTable(String str) {
-		Hashtable<String, String> hashTable = new Hashtable<String, String>();
-		String[] arr = str.split(";");
-		for (String item : arr) {
-			item = item.replace("(", "").replace(")", "");
-			String[] itemArr = item.split(",");
-			/* snakes/ladders tip toe put in table */
-			hashTable.put(itemArr[0], itemArr[1]);
+	public void initialize(Scanner in) throws Exception {
+
+		System.out.print("\nEnter Number of Players :");
+		int noOfPlayers = 0;
+		try {
+			in.hasNextInt();
+			noOfPlayers = in.nextInt();
+
+			this.setNoOfPlayers(noOfPlayers);
+
+		} catch (java.util.InputMismatchException e) {
+			System.out.println("\nPlease enter valid number of players.");
+			// throw new Exception("Invalid Input!");
+			return;
 		}
 
-		return hashTable;
+		if (noOfPlayers > 0) {
+			List<Player> players = new ArrayList<Player>();
+
+			// Reads a single line from the console and stores into player
+			for (int i = 0; i < noOfPlayers;) {
+
+				System.out.print("\nEnter Name of the Player " + (i + 1) + ": ");
+				if (in.hasNext()) {// blocks the call till user enters
+					String pName = in.next();
+					Player player = new Player(pName);
+					players.add(player);
+					i++;
+				}
+			}
+			this.setPlayers(players);
+
+			System.out.println("Initialization Done! Now, lets Start the game!\n");
+		}
+
 	}
 
 	public void showGameStatus() {
@@ -93,27 +103,29 @@ public class SnakesNLadderGame {
 
 		while (prevMarker != mark) {// iterate till mark changes
 			prevMarker = mark;
-			if (mark >= this.getTotalBoardItems()) {
+			if (mark >= this.board.getTotalBoardItems()) {
 				// winner found
 				break;
 			}
 			// check Snake
-			if (this.getSnakes().containsKey(mark + "")) {
-				int toe = Integer.parseInt(this.getSnakes().get(mark + ""));
+			if (this.board.getSnakes().containsKey(mark + "")) {
+				int toe = Integer.parseInt(this.board.getSnakes()
+						.get(mark + ""));
 				mark = toe;
 				System.out.println("Snake Bite: Moving Player "
 						+ player.getName() + " to new position " + mark);
 			}
 
 			// check Ladder at old or new position
-			if (this.getLadders().containsKey(mark + "")) {
-				int toe = Integer.parseInt(this.getLadders().get(mark + ""));
+			if (this.board.getLadders().containsKey(mark + "")) {
+				int toe = Integer.parseInt(this.board.getLadders().get(
+						mark + ""));
 				mark = toe;
 				System.out.println("Found Ladder: Moving Player "
 						+ player.getName() + " to new position " + mark);
 			}
 
-			if (mark >= this.getTotalBoardItems()) {
+			if (mark >= this.board.getTotalBoardItems()) {
 				// winner found
 				break;
 			}
@@ -142,45 +154,6 @@ public class SnakesNLadderGame {
 		return sum;
 	}
 
-	public void initialize(Scanner in) throws Exception {
-
-		System.out.print("\nEnter Number of Players :");
-		int noOfPlayers = 0;
-		try {
-			in.hasNextInt();
-			noOfPlayers = in.nextInt();
-
-			this.setNoOfPlayers(noOfPlayers);
-
-		} catch (java.util.InputMismatchException e) {
-			System.out.println("\nPlease enter valid number of players.");
-			// throw new Exception("Invalid Input!");
-			return;
-		}
-
-		if (noOfPlayers > 0) {
-			List<Player> players = new ArrayList<Player>();
-
-			// Reads a single line from the console and stores into player
-			for (int i = 0; i < noOfPlayers;) {
-
-				System.out
-						.print("\nEnter Name of the Player " + (i + 1) + ": ");
-				if (in.hasNext()) {// blocks the call till user enters
-					String pName = in.next();
-					Player player = new Player(pName);
-					players.add(player);
-					i++;
-				}
-			}
-			this.setPlayers(players);
-
-			System.out
-					.println("Initialization Done! Now, lets Start the game!");
-		}
-
-	}
-
 	public String play(Scanner in) {
 		String winnerName = "";
 
@@ -203,7 +176,7 @@ public class SnakesNLadderGame {
 					// show status of game
 					showGameStatus();
 
-					if (mark >= this.totalBoardItems) {
+					if (mark >= this.board.getTotalBoardItems()) {
 						done = true;
 						winnerName = playerName;
 						break;
@@ -212,30 +185,6 @@ public class SnakesNLadderGame {
 			}
 		}
 		return winnerName;
-	}
-
-	public Hashtable<String, String> getSnakes() {
-		return snakes;
-	}
-
-	public void setSnakes(Hashtable<String, String> snakes) {
-		this.snakes = snakes;
-	}
-
-	public Hashtable<String, String> getLadders() {
-		return ladders;
-	}
-
-	public void setLadders(Hashtable<String, String> ladders) {
-		this.ladders = ladders;
-	}
-
-	public int getTotalBoardItems() {
-		return totalBoardItems;
-	}
-
-	public void setTotalBoardItems(int totalBoardItems) {
-		this.totalBoardItems = totalBoardItems;
 	}
 
 	public List<Player> getPlayers() {
@@ -260,6 +209,22 @@ public class SnakesNLadderGame {
 
 	public void setWaitForUserToEnter(boolean waitForUserToEnter) {
 		this.waitForUserToEnter = waitForUserToEnter;
+	}
+
+	public Board getBoard() {
+		return board;
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+
+	public int getMaxNumberOnDie() {
+		return maxNumberOnDie;
+	}
+
+	public void setMaxNumberOnDie(int maxNumberOnDie) {
+		this.maxNumberOnDie = maxNumberOnDie;
 	}
 
 }

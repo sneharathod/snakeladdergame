@@ -15,7 +15,6 @@ public class SnakeNLadderGameTest extends TestCase {
 	// assigning the values
 	protected void setUp() {
 		// do some init
-
 	}
 
 	@Test
