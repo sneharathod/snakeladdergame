@@ -1,5 +1,6 @@
 package com.assignment.snl.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,8 +29,8 @@ public class SnakesNLadderGame {
 
 		try {
 			board = new Board();
-			
-			//read number of dice from properties file 
+
+			// read number of dice from properties file
 			reader = new GamePropertyReader(GameConstants.GAMEPROPERTYFILE);
 
 			this.maxNumberOnDie = 6 * Integer.parseInt(reader
@@ -61,7 +62,8 @@ public class SnakesNLadderGame {
 			// Reads a single line from the console and stores into player
 			for (int i = 0; i < noOfPlayers;) {
 
-				System.out.print("\nEnter Name of the Player " + (i + 1) + ": ");
+				System.out
+						.print("\nEnter Name of the Player " + (i + 1) + ": ");
 				if (in.hasNext()) {// blocks the call till user enters
 					String pName = in.next();
 					Player player = new Player(pName);
@@ -71,12 +73,13 @@ public class SnakesNLadderGame {
 			}
 			this.setPlayers(players);
 
-			System.out.println("Initialization Done! Now, lets Start the game!\n");
+			System.out
+					.println("Initialization Done! Now, lets Start the game!\n");
 		}
 
 	}
 
-	public void showGameStatus() {
+	public void displayGameStatus() {
 		List<Player> players = this.getPlayers();
 
 		System.out.println(separater);
@@ -174,7 +177,7 @@ public class SnakesNLadderGame {
 					int mark = movePlayer(i, diceDigit);
 
 					// show status of game
-					showGameStatus();
+					displayGameStatus();
 
 					if (mark >= this.board.getTotalBoardItems()) {
 						done = true;
@@ -227,4 +230,30 @@ public class SnakesNLadderGame {
 		this.maxNumberOnDie = maxNumberOnDie;
 	}
 
+	public String start(Scanner in, boolean waitForUserInput) {
+		String winnerName = null;
+		try {
+			this.setWaitForUserToEnter(waitForUserInput);
+			this.initialize(in); // init
+
+			if (this.getNoOfPlayers() < 1) {
+				return null;
+			}
+
+			winnerName = this.play(in);
+
+			System.out.println("And the Winner of this game is " + winnerName);
+
+		} catch (NumberFormatException | IOException e) {
+
+			e.printStackTrace();
+			System.out.println("Game Failure!");
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			System.out.println("Game Failure due to invalid Input!");
+
+		}
+		return winnerName;
+	}
 }
