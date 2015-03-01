@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import com.assignment.snl.GameClient;
 import com.assignment.snl.controller.SnakesNLadderGame;
 
 public class SnakeNLadderGameTest extends TestCase {
@@ -31,7 +30,7 @@ public class SnakeNLadderGameTest extends TestCase {
 			
 			String winnerName = game.start(in, false);
 
-			assertEquals(winnerName != null || !winnerName.isEmpty(), true);
+			assertEquals(winnerName != null && !winnerName.isEmpty(), true);
 
 		} catch (NumberFormatException e) {
 
