@@ -7,9 +7,7 @@ import com.assignment.snl.util.GameConstants;
 import com.assignment.snl.util.GamePropertyReader;
 
 public class Board {
-	private Hashtable<String, String> snakes = new Hashtable<String, String>();
-
-	private Hashtable<String, String> ladders = new Hashtable<String, String>();
+	private Hashtable<Integer, Integer> snakesLadders = new Hashtable<Integer, Integer>();
 
 	private int totalBoardItems = 0;
 
@@ -37,38 +35,27 @@ public class Board {
 
 		String ladderStr = reader.getProperty(GameConstants.LADDERS);
 
-		this.setSnakes(createHashTable(snakesStr));
-		this.setLadders(createHashTable(ladderStr));
+		this.setSnakesLadders(createHashTable(snakesStr));
+		this.getSnakesLadders().putAll(createHashTable(ladderStr));
+		
+		//System.out.println("size of snakesnladder"+this.getSnakesLadders().size());
 
 	}
 
-	private static Hashtable<String, String> createHashTable(String str) {
-		Hashtable<String, String> hashTable = new Hashtable<String, String>();
+	private static Hashtable<Integer, Integer> createHashTable(String str) {
+		Hashtable<Integer, Integer> hashTable = new Hashtable<Integer, Integer>();
 		String[] arr = str.split(";");
+
 		for (String item : arr) {
 			item = item.replace("(", "").replace(")", "");
 			String[] itemArr = item.split(",");
+
 			/* snakes/ladders tip toe put in table */
-			hashTable.put(itemArr[0], itemArr[1]);
+			hashTable.put(Integer.parseInt(itemArr[0]),
+					Integer.parseInt(itemArr[1]));
 		}
 
 		return hashTable;
-	}
-
-	public Hashtable<String, String> getSnakes() {
-		return snakes;
-	}
-
-	public void setSnakes(Hashtable<String, String> snakes) {
-		this.snakes = snakes;
-	}
-
-	public Hashtable<String, String> getLadders() {
-		return ladders;
-	}
-
-	public void setLadders(Hashtable<String, String> ladders) {
-		this.ladders = ladders;
 	}
 
 	public int getTotalBoardItems() {
@@ -79,4 +66,11 @@ public class Board {
 		this.totalBoardItems = totalBoardItems;
 	}
 
+	public Hashtable<Integer, Integer> getSnakesLadders() {
+		return snakesLadders;
+	}
+
+	public void setSnakesLadders(Hashtable<Integer, Integer> snakesLadders) {
+		this.snakesLadders = snakesLadders;
+	}
 }

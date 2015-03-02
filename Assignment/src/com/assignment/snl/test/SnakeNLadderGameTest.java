@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.assignment.snl.controller.GameController;
 import com.assignment.snl.controller.SnakesNLadderGame;
 
 public class SnakeNLadderGameTest extends TestCase {
@@ -18,18 +19,22 @@ public class SnakeNLadderGameTest extends TestCase {
 	}
 
 	@Test
-	public void test() {
-		System.out.println("Inside test() for JUnit testing!");
+	public void testGame() {
+		System.out.println("Inside testGame() for JUnit testing of full Game!");
 
-		SnakesNLadderGame game = new SnakesNLadderGame();
 		Scanner in = null;
+		String winnerName = null;
 		try {
-			in = new Scanner(SnakeNLadderGameTest.class.getResourceAsStream(propFileName));
+			GameController cntrl = new GameController(new SnakesNLadderGame());
+			try {
+				//read from file
+				in = new Scanner(SnakeNLadderGameTest.class.getResourceAsStream(propFileName));
+				
+				winnerName = cntrl.start(in, false);
+			} finally {
+				in.close();
+			}
 			
-			game = new SnakesNLadderGame();
-			
-			String winnerName = game.start(in, false);
-
 			assertEquals(winnerName != null && !winnerName.isEmpty(), true);
 
 		} catch (NumberFormatException e) {

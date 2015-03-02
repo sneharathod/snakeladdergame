@@ -1,7 +1,5 @@
 package com.assignment.snl.test;
 
-import java.util.Scanner;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -10,54 +8,48 @@ import com.assignment.snl.controller.SnakesNLadderGame;
 
 public class SnakeNLadderGameTest2 extends TestCase {
 
-	private static final String propFileName = "gameInput.Properties";
-
+	private SnakesNLadderGame game = null;
+	
+	private int maxNumberOnDie = 0;
+	
 	// assigning the values
+	// automatic call while testcase initialization
 	protected void setUp() {
-		// do some init
+		System.out.println("In Setup");
+
+		game = new SnakesNLadderGame();
+			
+		maxNumberOnDie = 6;
 	}
 
+	public int testRollDice() {
+		System.out.println("Inside testRollDice() for JUnit testing of parts of Game!");
+
+		System.out.println("Testing roll the Dice!");
+
+		game.setMaxNumberOnDie(maxNumberOnDie);
+		int dicefacevalue = game.rollTheDice();
+		
+		// diceFaceValue in maxNoDice range
+		assertTrue(maxNumberOnDie >= dicefacevalue && dicefacevalue > 0);
+
+		System.out.println("Game's roll the Dice is working fine!");
+		
+		return dicefacevalue;
+	}
+	
 	@Test
-	public void test() {
-		System.out.println("Inside test() for JUnit testing!");
+	public void testMovePlayer() {
+		System.out.println("Inside testMovePlayer() for JUnit testing of parts of Game!");
 
-		SnakesNLadderGame game = new SnakesNLadderGame();
-		Scanner in = null;
-		try {
-			in = new Scanner(
-					SnakeNLadderGameTest.class
-							.getResourceAsStream(propFileName));
+		System.out.println("Testing move the player!");
 
-			game = new SnakesNLadderGame();
+		int diceDigit = testRollDice();
+		int newPosition = game.movePlayer("TestPlayer",0, diceDigit);
+		
+		assertTrue(newPosition <= game.getBoard().getTotalBoardItems() && newPosition > 0);
 
-			System.out.println("Testing roll the Dice!");
-
-			//test dice rolling
-			int maxNoOnDice = game.getMaxNumberOnDie();
-			assertTrue(maxNoOnDice!=0);
-			
-			int dicefacevalue = game.rollTheDice();
-			//diceFaceValue in maxNoDice range
-			assertTrue(maxNoOnDice >= dicefacevalue && dicefacevalue > 0);
-			
-			System.out.println("Game's roll the Dice is working fine!");
-
-			String winnerName = game.start(in, false);
-			assertEquals(winnerName != null && !winnerName.isEmpty(), true);
-			System.out.println("Game is working fine");
-
-		} catch (NumberFormatException e) {
-
-			//e.printStackTrace();
-			System.out.println("Game Failure!");
-		} catch (Exception e) {
-
-			//e.printStackTrace();
-			System.out.println("Game Failure due to invalid Input!");
-
-		} finally {
-			in.close();
-		}
+		System.out.println("Game's move player is working fine!");
 
 	}
 
