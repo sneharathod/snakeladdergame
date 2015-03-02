@@ -25,6 +25,13 @@ public class GameController {
 		this.game = game;
 	}
 
+	/**
+	 * Take user input
+	 * i.e. Number of dice, Number of players and player names
+	 * Validate Number of dice and number of players
+	 * @param in
+	 * @throws Exception
+	 */
 	public void setUp(Scanner in) throws Exception {
 
 		System.out.print("\nEnter Number of Dice :");
@@ -74,7 +81,7 @@ public class GameController {
 		}
 		game.setPlayers(players);
 
-		System.out.println("Initialization Done! \nNow, lets Start the game!\n");
+		System.out.println("\nInitialization Done! \nNow, lets Start the game!\n");
 
 	}
 
